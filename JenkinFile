@@ -2,12 +2,20 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-            checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Sumitkur/gcpterraform.git']]])            
-
-          }
-        }
+        stage('clean workspace') {
+      steps {
+        cleanWs()
+      }
+    }
+    stage('checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    stage('terraform') {
+      steps {
+        sh './terraformw apply -auto-approve -no-color'
+      }
         
         stage ("terraform init") {
             steps {
